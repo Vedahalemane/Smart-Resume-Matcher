@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart Resume Matcher</title>
+
+<style>
+body{
+ margin:0;
+ font-family:Segoe UI;
+ background:#0f172a;
+ height:100vh;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+}
+
+.container{
+ background:#020617;
+ padding:40px;
+ border-radius:20px;
+ width:550px;
+ color:white;
+ box-shadow:0 0 40px #1e3a8a;
+ text-align:center;
+}
+
+h1{
+ color:#38bdf8;
+}
+
+textarea{
+ width:100%;
+ height:120px;
+ margin:10px 0;
+ padding:10px;
+ border:none;
+ border-radius:10px;
+ background:#1e293b;
+ color:white;
+}
+
+button{
+ padding:12px 25px;
+ background:#2563eb;
+ color:white;
+ border:none;
+ border-radius:10px;
+ cursor:pointer;
+}
+
+button:hover{
+ background:#1d4ed8;
+}
+
+.circle{
+ margin:20px auto;
+ width:150px;
+ height:150px;
+ border-radius:50%;
+ background:conic-gradient(#38bdf8 0deg,#020617 0deg);
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ font-size:30px;
+ box-shadow:0 0 20px #38bdf8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Smart Resume Matcher</h1>
+
+<textarea id="resume" placeholder="Paste Resume"></textarea>
+<textarea id="job" placeholder="Paste Job Description"></textarea>
+
+<button onclick="match()">Match Resume</button>
+
+<div class="circle" id="scoreCircle">
+<span id="scoreText">0%</span>
+</div>
+
+</div>
+
+<script>
+async function match(){
+  try {
+    const resume = document.getElementById("resume").value
+    const job = document.getElementById("job").value
+
+    document.getElementById("scoreText").innerHTML = "..."
+
+    const res = await fetch("/matchResume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ resume, job })
+    })
+
+    if (!res.ok) {
+      document.getElementById("scoreText").innerHTML = "Error"
+      return
+    }
+
+    const data = await res.json()
+    const score = Number(data.score) || 0
+
+    requestAnimationFrame(() => {
+      document.getElementById("scoreText").innerHTML = score + "%"
+      document.getElementById("scoreCircle").style.background =
+        `conic-gradient(#38bdf8 ${score*3.6}deg,#020617 ${score*3.6}deg)`
+    })
+  } catch (e) {
+    document.getElementById("scoreText").innerHTML = "Error"
+  }
+}
+</script>
+
+
+
+
+</body>
+</html>

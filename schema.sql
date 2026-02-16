@@ -1,0 +1,17 @@
+CREATE TABLE users(
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ email TEXT,
+ password TEXT
+);
+
+CREATE TABLE resumes(
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ user_id INTEGER,
+ resume_text TEXT
+);
+
+CREATE TABLE jobs(
+ id INTEGER PRIMARY KEY AUTOINCREMENT,
+ job_desc TEXT
+);
+
